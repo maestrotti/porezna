@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izračun Mjesečne Akontacije za Kiriju</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1b2735 0%, #090a0f 100%);
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #00ffff;
+            animation: glow 2s infinite alternate;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-btn a {
+            text-decoration: none;
+            color: #00ffff;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .back-btn a:hover {
+            background-color: #00ffff;
+            color: #000;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.4);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.7);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Izračun Mjesečne Akontacije za Kiriju</h2>
+    <form id="rentForm">
+        <label for="rent">Iznos Kirije (u KM):</label>
+        <input type="number" id="rent" name="rent" required>
+
+        <label for="months">Broj Mjeseci:</label>
+        <input type="number" id="months" name="months" required>
+
+        <button type="button" onclick="calculateInstallment()">Izračunaj Akontaciju</button>
+    </form>
+
+    <div id="result" class="result"></div>
+    <div id="totalAmountDisplay" class="result"></div>
+    <div id="exemptAmountDisplay" class="result"></div> <!-- Oslobođen iznos -->
+    <div id="taxableAmountDisplay" class="result"></div>
+    <div id="taxAmountDisplay" class="result"></div>
+    <div id="monthlyInstallmentDisplay" class="result"></div>
+</div>
+<div class="back-btn">
+    <a href="index.html">Nazad na Glavni Meni</a>
+</div>
+<script>
+    function calculateInstallment() {
+        const rent = parseFloat(document.getElementById('rent').value);
+        const months = parseInt(document.getElementById('months').value);
+
+        if (isNaN(rent) || isNaN(months) || rent <= 0 || months <= 0) {
+            document.getElementById('result').textContent = "Molimo unesite validne vrijednosti.";
+            return;
+        }
+
+        // 1. Izračunavanje ukupnog iznosa: kirija * broj mjeseci / 0.93
+        const totalAmount = (rent * months) / 0.93;
+        document.getElementById('totalAmountDisplay').textContent = `Ukupni iznos: ${totalAmount.toFixed(2)} KM`;
+
+        // Oslobođen iznos: Ukupni iznos - Oporezivi iznos (ili 30% od ukupnog iznosa)
+        const exemptAmount = totalAmount * 0.30;
+        document.getElementById('exemptAmountDisplay').textContent = `Oslobođen iznos: ${exemptAmount.toFixed(2)} KM`;
+
+        // 2. Oporezivi iznos: 70% od ukupnog iznosa
+        const taxableAmount = totalAmount * 0.70;
+        document.getElementById('taxableAmountDisplay').textContent = `Oporezivi iznos: ${taxableAmount.toFixed(2)} KM`;
+
+        // 3. 10% od oporezivog iznosa
+        const taxAmount = taxableAmount * 0.10;
+        document.getElementById('taxAmountDisplay').textContent = `Porez (10%): ${taxAmount.toFixed(2)} KM`;
+
+        // 4. Mjesečna akontacija: 10% oporezivog iznosa / broj mjeseci
+        const monthlyInstallment = taxAmount / months;
+        document.getElementById('monthlyInstallmentDisplay').textContent = `Mjesečna akontacija: ${monthlyInstallment.toFixed(2)} KM`;
+    }
+</script>
+
+</body>
+</html>
